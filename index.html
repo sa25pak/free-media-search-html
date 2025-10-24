@@ -519,9 +519,9 @@
                                 const qualityOrder = { 'uhd': 4, 'hd': 3, 'sd': 2, 'mobile': 1 };
                                 const aQuality = qualityOrder[a.quality] || 0;
                                 const bQuality = qualityOrder[b.quality] || 0;
-                                
+
                                 if (aQuality !== bQuality) return bQuality - aQuality;
-                                
+
                                 // Then by file size
                                 return (b.file_size || 0) - (a.file_size || 0);
                             });
@@ -623,14 +623,14 @@
                         const getHighestQualityPixabayVideo = (videos) => {
                             // Priority order: large > medium > small > tiny
                             const qualityOrder = ['large', 'medium', 'small', 'tiny'];
-                            
+
                             for (const quality of qualityOrder) {
                                 if (videos[quality]?.url) {
                                     console.log(`🎬 Pixabay Video: Selected ${quality} quality (${videos[quality].size || 'unknown size'})`);
                                     return videos[quality].url;
                                 }
                             }
-                            
+
                             return null;
                         };
 
@@ -698,14 +698,14 @@
                     <div class="relative group">
                         ${isVideo ? `
                             <div class="relative video-container">
-                                <video 
-                                    class="w-full h-auto rounded-lg" 
+                                <video
+                                    class="w-full h-auto rounded-lg"
                                     poster="${item.thumbnail}"
                                     preload="metadata"
                                     muted
                                     loop
                                     crossorigin="anonymous"
-                                    onmouseenter="playVideo(this)" 
+                                    onmouseenter="playVideo(this)"
                                     onmouseleave="pauseVideo(this)"
                                     onclick="toggleVideoPlayback(this)"
                                     onerror="handleVideoError(this, '${item.preview}', '${item.thumbnail}')"
@@ -782,7 +782,7 @@
                 url: url,
                 note: 'This is the highest quality available from the free API'
             });
-            
+
             const link = document.createElement('a');
             link.href = url;
             link.download = filename;
@@ -857,14 +857,14 @@
         function handleVideoError(video, videoUrl, thumbnailUrl) {
             console.error('❌ Video failed to load:', videoUrl);
             console.log('🔄 Falling back to thumbnail image');
-            
+
             // Replace video with thumbnail image
             const img = document.createElement('img');
             img.src = thumbnailUrl;
             img.className = 'w-full h-auto';
             img.alt = '';
             img.loading = 'lazy';
-            
+
             video.parentElement.replaceChild(img, video);
         }
 
