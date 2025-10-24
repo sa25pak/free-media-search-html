@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Setup Guide - Free Media Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen py-8">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">
+                🚀 Quick API Setup Guide
+            </h1>
+            <p class="text-center text-gray-600 mb-8">Follow these simple steps to get your Free Media Search app working!</p>
+
+            <!-- Step 1: Unsplash -->
+            <div class="mb-8 border rounded-lg p-6 bg-gray-900 text-white">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="bg-white text-gray-900 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">1</span>
+                    Get Unsplash API Key
+                </h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-semibold mb-2">Steps:</h3>
+                        <ol class="text-sm space-y-1 text-gray-300">
+                            <li>1. Click the link below</li>
+                            <li>2. Click "New Application"</li>
+                            <li>3. Accept terms and conditions</li>
+                            <li>4. Fill app name: "Free Media Search"</li>
+                            <li>5. Description: "Personal media search"</li>
+                            <li>6. Copy the "Access Key"</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <a href="https://unsplash.com/developers" target="_blank"
+                           class="block bg-white text-gray-900 text-center py-3 px-6 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Open Unsplash Developers →
+                        </a>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium mb-2">Paste your Unsplash Access Key:</label>
+                            <input type="text" id="unsplashKey" placeholder="Your Unsplash Access Key"
+                                   class="w-full p-2 border rounded text-gray-900" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Pexels -->
+            <div class="mb-8 border rounded-lg p-6 bg-green-600 text-white">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="bg-white text-green-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">2</span>
+                    Get Pexels API Key
+                </h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-semibold mb-2">Steps:</h3>
+                        <ol class="text-sm space-y-1 text-green-100">
+                            <li>1. Click the link below</li>
+                            <li>2. Click "Get Started"</li>
+                            <li>3. Sign up with email</li>
+                            <li>4. Verify your email</li>
+                            <li>5. Go to your profile → "Your API Key"</li>
+                            <li>6. Copy the API key</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <a href="https://www.pexels.com/api/" target="_blank"
+                           class="block bg-white text-green-600 text-center py-3 px-6 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Open Pexels API →
+                        </a>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium mb-2">Paste your Pexels API Key:</label>
+                            <input type="text" id="pexelsKey" placeholder="Your Pexels API Key"
+                                   class="w-full p-2 border rounded text-gray-900" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Pixabay -->
+            <div class="mb-8 border rounded-lg p-6 bg-blue-600 text-white">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="bg-white text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">3</span>
+                    Get Pixabay API Key
+                </h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-semibold mb-2">Steps:</h3>
+                        <ol class="text-sm space-y-1 text-blue-100">
+                            <li>1. Click the link below</li>
+                            <li>2. Click "Join" (top right)</li>
+                            <li>3. Sign up with email</li>
+                            <li>4. Verify your email</li>
+                            <li>5. Go to API docs → "API Key"</li>
+                            <li>6. Copy the API key</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <a href="https://pixabay.com/api/docs/" target="_blank"
+                           class="block bg-white text-blue-600 text-center py-3 px-6 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Open Pixabay API →
+                        </a>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium mb-2">Paste your Pixabay API Key:</label>
+                            <input type="text" id="pixabayKey" placeholder="Your Pixabay API Key"
+                                   class="w-full p-2 border rounded text-gray-900" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Apply Keys -->
+            <div class="border rounded-lg p-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="bg-white text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">4</span>
+                    Apply Your API Keys
+                </h2>
+                <p class="mb-4">Once you have all three keys, click the button below to automatically update your HTML file!</p>
+                <button onclick="updateHTMLFile()"
+                        class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    🚀 Update My HTML File Now!
+                </button>
+                <div id="status" class="mt-4 p-3 rounded hidden"></div>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="mt-8 text-center">
+                <div class="inline-flex space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-gray-300" id="step1"></div>
+                    <div class="w-3 h-3 rounded-full bg-gray-300" id="step2"></div>
+                    <div class="w-3 h-3 rounded-full bg-gray-300" id="step3"></div>
+                    <div class="w-3 h-3 rounded-full bg-gray-300" id="step4"></div>
+                </div>
+                <p class="text-sm text-gray-600 mt-2">Complete all steps to activate your app</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Track progress
+        function updateProgress() {
+            const unsplash = document.getElementById('unsplashKey').value.trim();
+            const pexels = document.getElementById('pexelsKey').value.trim();
+            const pixabay = document.getElementById('pixabayKey').value.trim();
+
+            document.getElementById('step1').className = unsplash ? 'w-3 h-3 rounded-full bg-green-500' : 'w-3 h-3 rounded-full bg-gray-300';
+            document.getElementById('step2').className = pexels ? 'w-3 h-3 rounded-full bg-green-500' : 'w-3 h-3 rounded-full bg-gray-300';
+            document.getElementById('step3').className = pixabay ? 'w-3 h-3 rounded-full bg-green-500' : 'w-3 h-3 rounded-full bg-gray-300';
+        }
+
+        // Add event listeners
+        document.getElementById('unsplashKey').addEventListener('input', updateProgress);
+        document.getElementById('pexelsKey').addEventListener('input', updateProgress);
+        document.getElementById('pixabayKey').addEventListener('input', updateProgress);
+
+        // Update HTML file function
+        function updateHTMLFile() {
+            const unsplashKey = document.getElementById('unsplashKey').value.trim();
+            const pexelsKey = document.getElementById('pexelsKey').value.trim();
+            const pixabayKey = document.getElementById('pixabayKey').value.trim();
+            const status = document.getElementById('status');
+
+            if (!unsplashKey || !pexelsKey || !pixabayKey) {
+                status.className = 'mt-4 p-3 rounded bg-red-100 text-red-700';
+                status.textContent = '❌ Please fill in all three API keys first!';
+                status.classList.remove('hidden');
+                return;
+            }
+
+            // Show the code to update
+            const updateCode = `
+// Find these lines in your index.html file (around line 228) and replace:
+
+const API_CONFIG = {
+    unsplash: {
+        key: '${unsplashKey}',
+        url: 'https://api.unsplash.com/search/photos'
+    },
+    pexels: {
+        key: '${pexelsKey}',
+        imageUrl: 'https://api.pexels.com/v1/search',
+        videoUrl: 'https://api.pexels.com/videos/search'
+    },
+    pixabay: {
+        key: '${pixabayKey}',
+        imageUrl: 'https://pixabay.com/api/',
+        videoUrl: 'https://pixabay.com/api/videos/'
+    }
+};
+            `;
+
+            status.className = 'mt-4 p-3 rounded bg-green-100 text-green-800';
+            status.innerHTML = `
+                <div class="font-semibold mb-2">✅ Ready to update! Copy this code:</div>
+                <textarea class="w-full h-48 p-2 border rounded font-mono text-sm bg-white text-gray-900" readonly>${updateCode.trim()}</textarea>
+                <div class="mt-2 text-sm">
+                    <strong>Next steps:</strong><br>
+                    1. Open your index.html file in a text editor<br>
+                    2. Find the API_CONFIG section (around line 228)<br>
+                    3. Replace it with the code above<br>
+                    4. Save the file and refresh your browser!
+                </div>
+            `;
+            status.classList.remove('hidden');
+
+            document.getElementById('step4').className = 'w-3 h-3 rounded-full bg-green-500';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Test</h1>
+    <button onclick="testPexels()">Test Pexels</button>
+    <button onclick="testPixabay()">Test Pixabay</button>
+    <div id="results"></div>
+
+    <script>
+        const pexelsKey = 'eFE3g2VKvdCBrzp23yWZfL2ttyr5QzgbyvhwCNmmzO4ncKqnaqiB6G0w';
+        const pixabayKey = '52921651-b216e749f549d14f0217b8179';
+
+        async function testPexels() {
+            console.log('Testing Pexels API...');
+            const results = document.getElementById('results');
+
+            try {
+                const response = await fetch('https://api.pexels.com/v1/search?query=nature&per_page=5', {
+                    headers: {
+                        'Authorization': pexelsKey
+                    }
+                });
+
+                console.log('Pexels response status:', response.status);
+                const data = await response.json();
+                console.log('Pexels data:', data);
+
+                results.innerHTML = `<h3>Pexels Result:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                console.error('Pexels error:', error);
+                results.innerHTML = `<h3>Pexels Error:</h3><pre>${error.message}</pre>`;
+            }
+        }
+
+        async function testPixabay() {
+            console.log('Testing Pixabay API...');
+            const results = document.getElementById('results');
+
+            try {
+                const response = await fetch(`https://pixabay.com/api/?key=${pixabayKey}&q=nature&per_page=5&safesearch=true&image_type=photo`);
+
+                console.log('Pixabay response status:', response.status);
+                const data = await response.json();
+                console.log('Pixabay data:', data);
+
+                results.innerHTML = `<h3>Pixabay Result:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                console.error('Pixabay error:', error);
+                results.innerHTML = `<h3>Pixabay Error:</h3><pre>${error.message}</pre>`;
+            }
+        }
+    </script>
+</body>
+</html>

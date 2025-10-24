@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Media Search - Find Copyright-Free Images & Videos</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📸</text></svg>">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        .media-grid {
+            column-count: 2;
+            column-gap: 0.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .media-grid {
+                column-count: 3;
+                column-gap: 0.75rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .media-grid {
+                column-count: 4;
+                column-gap: 0.75rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .media-grid {
+                column-count: 5;
+                column-gap: 1rem;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .media-grid {
+                column-count: 6;
+                column-gap: 1rem;
+            }
+        }
+
+        @media (min-width: 1536px) {
+            .media-grid {
+                column-count: 7;
+                column-gap: 1rem;
+            }
+        }
+
+        .media-item {
+            break-inside: avoid;
+            margin-bottom: 0.5rem;
+        }
+
+        .pulse-dot {
+            animation: pulse-dot 1.4s infinite ease-in-out;
+        }
+
+        .pulse-dot:nth-child(1) { animation-delay: -0.32s; }
+        .pulse-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes pulse-dot {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .hover-scale {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
+                Free Media Search
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Discover high-quality, copyright-free images and videos from multiple sources including
+                Unsplash, Pexels, and Pixabay - all in one place.
+            </p>
+        </header>
+
+        <!-- Search Section -->
+        <div class="max-w-4xl mx-auto mb-8">
+            <!-- Search Bar -->
+            <div class="w-full mb-6">
+                <form id="searchForm" class="relative">
+                    <div class="relative flex items-center">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Search for free images and videos..."
+                            class="w-full px-6 py-4 pr-16 text-lg border-2 border-gray-300 rounded-full
+                                 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100
+                                 transition-all duration-200 shadow-lg"
+                        />
+                        <button
+                            type="submit"
+                            id="searchButton"
+                            class="absolute right-2 p-3 bg-blue-600 text-white rounded-full
+                                 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100
+                                 transition-all duration-200 shadow-md hover:shadow-lg"
+                        >
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Popular Searches -->
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600 text-sm mb-3">Popular searches:</p>
+                    <div class="flex flex-wrap justify-center gap-2" id="popularSearches">
+                        <!-- Popular search buttons will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex justify-center">
+                <div class="inline-flex rounded-lg border border-gray-300 bg-white p-1 shadow-sm">
+                    <button
+                        id="imagesTab"
+                        class="flex items-center gap-2 px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 bg-blue-600 text-white shadow-md"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Images
+                    </button>
+                    <button
+                        id="videosTab"
+                        class="flex items-center gap-2 px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Videos
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="max-w-7xl mx-auto">
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" class="hidden flex flex-col items-center justify-center py-12">
+                <div class="flex space-x-2 mb-4">
+                    <div class="w-4 h-4 bg-blue-600 rounded-full pulse-dot"></div>
+                    <div class="w-4 h-4 bg-blue-600 rounded-full pulse-dot"></div>
+                    <div class="w-4 h-4 bg-blue-600 rounded-full pulse-dot"></div>
+                </div>
+                <p class="text-gray-600 text-lg">Searching for free media...</p>
+                <p class="text-gray-500 text-sm mt-2">
+                    We're searching across Unsplash, Pexels, and Pixabay
+                </p>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="hidden bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                <p class="text-red-700 text-lg">⚠️ <span id="errorText"></span></p>
+                <p class="text-red-600 text-sm mt-2">
+                    Please check your internet connection and try again.
+                </p>
+            </div>
+
+            <!-- Results Count -->
+            <div id="resultsCount" class="hidden mb-6">
+                <p class="text-gray-600 text-lg">
+                    Found <span id="resultNumber" class="font-semibold text-gray-800">0</span>
+                    free <span id="mediaTypeText">images</span> for "<span id="searchQuery"></span>"
+                </p>
+            </div>
+
+            <!-- Media Grid -->
+            <div id="mediaGrid" class="media-grid">
+                <!-- Media items will be dynamically inserted here -->
+            </div>
+
+            <!-- No Results -->
+            <div id="noResults" class="hidden text-center py-12">
+                <div class="text-6xl mb-4">🔍</div>
+                <p class="text-xl text-gray-600 mb-2">No results found</p>
+                <p class="text-gray-500">
+                    Try searching with different keywords or check the other media type.
+                </p>
+            </div>
+
+            <!-- Welcome Message -->
+            <div id="welcomeMessage" class="text-center py-16">
+                <div class="text-8xl mb-6">📸</div>
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">
+                    Ready to find amazing free media?
+                </h2>
+                <p class="text-gray-600 text-lg max-w-md mx-auto">
+                    Search for high-quality images and videos that you can use for free in your projects,
+                    presentations, and creative work.
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-16 text-center text-gray-500 text-sm">
+            <p class="mb-2">
+                Sources: Unsplash, Pexels, and Pixabay
+            </p>
+            <p>
+                Always check individual licenses before commercial use.
+                Most content is free for personal and commercial use.
+            </p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Global variables
+        let currentMediaType = 'images';
+        let currentQuery = '';
+        let hasSearched = false;
+
+        // API configurations - LIVE KEYS CONFIGURED!
+        const API_CONFIG = {
+            unsplash: {
+                key: 'YOUR_UNSPLASH_ACCESS_KEY', // Not configured - Unsplash results will be skipped
+                url: 'https://api.unsplash.com/search/photos'
+            },
+            pexels: {
+                key: 'eFE3g2VKvdCBrzp23yWZfL2ttyr5QzgbyvhwCNmmzO4ncKqnaqiB6G0w',
+                imageUrl: 'https://api.pexels.com/v1/search',
+                videoUrl: 'https://api.pexels.com/videos/search'
+            },
+            pixabay: {
+                key: '52921651-b216e749f549d14f0217b8179',
+                imageUrl: 'https://pixabay.com/api/',
+                videoUrl: 'https://pixabay.com/api/videos/'
+            }
+        };
+
+        // Popular searches
+        const POPULAR_SEARCHES = [
+            'nature', 'business', 'technology', 'people', 'food',
+            'travel', 'architecture', 'animals', 'art', 'music'
+        ];
+
+        // DOM elements
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const imagesTab = document.getElementById('imagesTab');
+        const videosTab = document.getElementById('videosTab');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const resultsCount = document.getElementById('resultsCount');
+        const resultNumber = document.getElementById('resultNumber');
+        const mediaTypeText = document.getElementById('mediaTypeText');
+        const searchQuery = document.getElementById('searchQuery');
+        const mediaGrid = document.getElementById('mediaGrid');
+        const noResults = document.getElementById('noResults');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const popularSearches = document.getElementById('popularSearches');
+
+        // Initialize the application
+        function init() {
+            setupEventListeners();
+            renderPopularSearches();
+
+            // Check if we have working API keys
+            const hasWorkingKeys = !API_CONFIG.pexels.key.includes('YOUR_') || !API_CONFIG.pixabay.key.includes('YOUR_');
+
+            if (!hasWorkingKeys) {
+                showSetupMessage();
+            } else {
+                // Show success message that APIs are configured
+                console.log('✅ API Keys configured:', {
+                    pexels: !API_CONFIG.pexels.key.includes('YOUR_'),
+                    pixabay: !API_CONFIG.pixabay.key.includes('YOUR_'),
+                    unsplash: !API_CONFIG.unsplash.key.includes('YOUR_')
+                });
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            searchForm.addEventListener('submit', handleSearch);
+            imagesTab.addEventListener('click', () => switchMediaType('images'));
+            videosTab.addEventListener('click', () => switchMediaType('videos'));
+        }
+
+        // Render popular search buttons
+        function renderPopularSearches() {
+            popularSearches.innerHTML = POPULAR_SEARCHES.map(search => `
+                <button
+                    onclick="performSearch('${search}')"
+                    class="px-4 py-2 text-sm bg-white text-gray-700 rounded-full
+                           border border-gray-300 hover:border-blue-400 hover:text-blue-600
+                           transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                    ${search}
+                </button>
+            `).join('');
+        }
+
+        // Handle search form submission
+        function handleSearch(e) {
+            e.preventDefault();
+            const query = searchInput.value.trim();
+            if (query) {
+                performSearch(query);
+            }
+        }
+
+        // Perform search
+        async function performSearch(query) {
+            currentQuery = query;
+            hasSearched = true;
+            searchInput.value = query;
+
+            // Update UI
+            hideAllSections();
+            showLoadingSpinner();
+
+            try {
+                const results = await searchMedia(query, currentMediaType);
+                displayResults(results, query);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        // Switch media type
+        function switchMediaType(type) {
+            if (currentMediaType === type) return;
+
+            currentMediaType = type;
+            updateTabStyles();
+
+            if (currentQuery) {
+                performSearch(currentQuery);
+            }
+        }
+
+        // Update tab styles
+        function updateTabStyles() {
+            const activeClasses = 'bg-blue-600 text-white shadow-md';
+            const inactiveClasses = 'text-gray-700 hover:text-blue-600 hover:bg-blue-50';
+
+            if (currentMediaType === 'images') {
+                imagesTab.className = `flex items-center gap-2 px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 ${activeClasses}`;
+                videosTab.className = `flex items-center gap-2 px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 ${inactiveClasses}`;
+            } else {
+                videosTab.className = `flex items-center gap-2 px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 ${activeClasses}`;
+                imagesTab.className = `flex items-center gap-2 px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 ${inactiveClasses}`;
+            }
+        }
+
+        // Search media from APIs
+        async function searchMedia(query, type) {
+            const results = [];
+            const errors = [];
+
+            console.log(`🔍 Starting search for "${query}" (${type})`);
+
+            // Pexels (images and videos)
+            if (!API_CONFIG.pexels.key.includes('YOUR_')) {
+                console.log('📱 Searching Pexels...');
+                try {
+                    const pexelsResults = await searchPexels(query, type);
+                    console.log(`✅ Pexels: Found ${pexelsResults.length} results`);
+                    results.push(...pexelsResults);
+                } catch (error) {
+                    console.error('❌ Pexels error:', error);
+                    errors.push(`Pexels: ${error.message}`);
+                }
+            }
+
+            // Pixabay (images and videos)
+            if (!API_CONFIG.pixabay.key.includes('YOUR_')) {
+                console.log('🎨 Searching Pixabay...');
+                try {
+                    const pixabayResults = await searchPixabay(query, type);
+                    console.log(`✅ Pixabay: Found ${pixabayResults.length} results`);
+                    results.push(...pixabayResults);
+                } catch (error) {
+                    console.error('❌ Pixabay error:', error);
+                    errors.push(`Pixabay: ${error.message}`);
+                }
+            }
+
+            console.log(`🎯 Total results: ${results.length}`);
+
+            if (results.length === 0 && errors.length > 0) {
+                throw new Error(`No results found. Errors: ${errors.join(', ')}`);
+            }
+
+            // Shuffle results to mix sources
+            return shuffleArray(results);
+        }
+
+        // Search Unsplash
+        async function searchUnsplash(query) {
+            try {
+                const response = await fetch(`${API_CONFIG.unsplash.url}?query=${encodeURIComponent(query)}&per_page=20`, {
+                    headers: {
+                        'Authorization': `Client-ID ${API_CONFIG.unsplash.key}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Unsplash API error');
+
+                const data = await response.json();
+                return data.results.map(photo => ({
+                    id: `unsplash_${photo.id}`,
+                    source: 'Unsplash',
+                    title: photo.alt_description || 'Untitled',
+                    description: photo.description || photo.alt_description || '',
+                    thumbnail: photo.urls.small,
+                    preview: photo.urls.regular,
+                    full: photo.urls.full,
+                    download: photo.urls.raw,
+                    photographer: photo.user.name,
+                    photographerUrl: photo.user.links.html,
+                    sourceUrl: photo.links.html,
+                    license: 'Unsplash License',
+                    tags: photo.tags?.map(tag => tag.title) || [],
+                    width: photo.width,
+                    height: photo.height
+                }));
+            } catch (error) {
+                console.error('Unsplash error:', error);
+                return [];
+            }
+        }
+
+        // Search Pexels - OPTIMIZED FOR HIGHEST QUALITY DOWNLOADS
+        async function searchPexels(query, type) {
+            try {
+                const url = type === 'images' ? API_CONFIG.pexels.imageUrl : API_CONFIG.pexels.videoUrl;
+                const response = await fetch(`${url}?query=${encodeURIComponent(query)}&per_page=20`, {
+                    headers: {
+                        'Authorization': API_CONFIG.pexels.key
+                    }
+                });
+
+                if (!response.ok) throw new Error('Pexels API error');
+
+                const data = await response.json();
+                const items = type === 'images' ? data.photos : data.videos;
+
+                return items.map(item => {
+                    if (type === 'images') {
+                        // Find highest quality download URL for images
+                        const getHighestQualityImage = (src) => {
+                            // Priority order: original > large2x > large > medium
+                            return src.original || src.large2x || src.large || src.medium;
+                        };
+
+                        console.log(`📸 Pexels Image Quality Available:`, {
+                            original: item.src.original ? '✅' : '❌',
+                            large2x: item.src.large2x ? '✅' : '❌',
+                            large: item.src.large ? '✅' : '❌',
+                            selectedForDownload: getHighestQualityImage(item.src)
+                        });
+
+                        return {
+                            id: `pexels_${item.id}`,
+                            source: 'Pexels',
+                            title: item.alt || 'Untitled',
+                            description: item.alt || '',
+                            thumbnail: item.src.small,
+                            preview: item.src.medium,
+                            full: item.src.large,
+                            download: getHighestQualityImage(item.src), // 🎯 HIGHEST QUALITY
+                            photographer: item.photographer,
+                            photographerUrl: item.photographer_url,
+                            sourceUrl: item.url,
+                            license: 'Pexels License',
+                            tags: [],
+                            width: item.width,
+                            height: item.height
+                        };
+                    } else {
+                        // Find highest quality video for download
+                        const getHighestQualityVideo = (videoFiles) => {
+                            // Sort by file size (larger = higher quality) and prefer common formats
+                            const sortedFiles = videoFiles.sort((a, b) => {
+                                // Prefer HD/4K quality levels
+                                const qualityOrder = { 'uhd': 4, 'hd': 3, 'sd': 2, 'mobile': 1 };
+                                const aQuality = qualityOrder[a.quality] || 0;
+                                const bQuality = qualityOrder[b.quality] || 0;
+                                
+                                if (aQuality !== bQuality) return bQuality - aQuality;
+                                
+                                // Then by file size
+                                return (b.file_size || 0) - (a.file_size || 0);
+                            });
+
+                            return sortedFiles[0]?.link || videoFiles[0]?.link;
+                        };
+
+                        const highestQualityVideo = getHighestQualityVideo(item.video_files);
+                        console.log(`🎬 Pexels Video Qualities:`, item.video_files.map(f => `${f.quality} (${Math.round((f.file_size || 0) / 1024 / 1024)}MB)`));
+                        console.log(`🎯 Selected for download:`, highestQualityVideo);
+
+                        return {
+                            id: `pexels_video_${item.id}`,
+                            source: 'Pexels',
+                            title: item.tags?.join(', ') || 'Untitled',
+                            description: item.tags?.join(', ') || '',
+                            thumbnail: item.image,
+                            preview: item.video_files.find(file => file.quality === 'sd')?.link || item.video_files[0]?.link,
+                            download: highestQualityVideo, // 🎯 HIGHEST QUALITY
+                            photographer: item.user.name,
+                            photographerUrl: item.user.url,
+                            sourceUrl: item.url,
+                            license: 'Pexels License',
+                            tags: item.tags || [],
+                            duration: item.duration,
+                            width: item.width,
+                            height: item.height
+                        };
+                    }
+                });
+            } catch (error) {
+                console.error('Pexels error:', error);
+                return [];
+            }
+        }
+
+        // Search Pixabay - OPTIMIZED FOR HIGHEST QUALITY DOWNLOADS
+        async function searchPixabay(query, type) {
+            try {
+                const url = type === 'images' ? API_CONFIG.pixabay.imageUrl : API_CONFIG.pixabay.videoUrl;
+                const params = new URLSearchParams({
+                    key: API_CONFIG.pixabay.key,
+                    q: query,
+                    per_page: 20,
+                    safesearch: 'true'
+                });
+
+                if (type === 'images') {
+                    params.append('image_type', 'photo');
+                }
+
+                const response = await fetch(`${url}?${params}`);
+
+                if (!response.ok) throw new Error('Pixabay API error');
+
+                const data = await response.json();
+
+                return data.hits.map(item => {
+                    if (type === 'images') {
+                        // Find highest quality image download URL
+                        const getHighestQualityPixabayImage = (item) => {
+                            // Priority order: fullHDURL > largeImageURL > webformatURL
+                            const options = [
+                                { url: item.fullHDURL, name: 'Full HD' },
+                                { url: item.largeImageURL, name: 'Large' },
+                                { url: item.webformatURL, name: 'Web Format' }
+                            ].filter(opt => opt.url);
+
+                            return options[0]?.url || item.webformatURL;
+                        };
+
+                        const highestQualityUrl = getHighestQualityPixabayImage(item);
+                        console.log(`🎨 Pixabay Image Quality Available:`, {
+                            fullHD: item.fullHDURL ? '✅' : '❌',
+                            large: item.largeImageURL ? '✅' : '❌',
+                            webFormat: item.webformatURL ? '✅' : '❌',
+                            selectedForDownload: highestQualityUrl
+                        });
+
+                        return {
+                            id: `pixabay_${item.id}`,
+                            source: 'Pixabay',
+                            title: item.tags,
+                            description: item.tags,
+                            thumbnail: item.webformatURL,
+                            preview: item.webformatURL,
+                            full: item.largeImageURL || item.webformatURL,
+                            download: highestQualityUrl, // 🎯 HIGHEST QUALITY
+                            photographer: item.user,
+                            photographerUrl: `https://pixabay.com/users/${item.user}-${item.user_id}/`,
+                            sourceUrl: item.pageURL,
+                            license: 'Pixabay License',
+                            tags: item.tags.split(', '),
+                            width: item.imageWidth,
+                            height: item.imageHeight
+                        };
+                    } else {
+                        // Find highest quality video for download
+                        const getHighestQualityPixabayVideo = (videos) => {
+                            // Priority order: large > medium > small > tiny
+                            const qualityOrder = ['large', 'medium', 'small', 'tiny'];
+                            
+                            for (const quality of qualityOrder) {
+                                if (videos[quality]?.url) {
+                                    console.log(`🎬 Pixabay Video: Selected ${quality} quality (${videos[quality].size || 'unknown size'})`);
+                                    return videos[quality].url;
+                                }
+                            }
+                            
+                            return null;
+                        };
+
+                        const highestQualityVideo = getHighestQualityPixabayVideo(item.videos);
+                        console.log(`🎨 Pixabay Video Qualities Available:`, {
+                            large: item.videos.large ? '✅' : '❌',
+                            medium: item.videos.medium ? '✅' : '❌',
+                            small: item.videos.small ? '✅' : '❌',
+                            selectedForDownload: highestQualityVideo
+                        });
+
+                        return {
+                            id: `pixabay_video_${item.id}`,
+                            source: 'Pixabay',
+                            title: item.tags,
+                            description: item.tags,
+                            thumbnail: item.picture_id ? `https://i.vimeocdn.com/video/${item.picture_id}.jpg` : '',
+                            preview: item.videos.small?.url || item.videos.medium?.url,
+                            download: highestQualityVideo, // 🎯 HIGHEST QUALITY
+                            photographer: item.user,
+                            photographerUrl: `https://pixabay.com/users/${item.user}-${item.user_id}/`,
+                            sourceUrl: item.pageURL,
+                            license: 'Pixabay License',
+                            tags: item.tags.split(', '),
+                            duration: item.duration,
+                            width: item.videos.large?.width || item.videos.medium?.width,
+                            height: item.videos.large?.height || item.videos.medium?.height
+                        };
+                    }
+                });
+            } catch (error) {
+                console.error('Pixabay error:', error);
+                return [];
+            }
+        }
+
+        // Display search results
+        function displayResults(results, query) {
+            hideAllSections();
+
+            searchQuery.textContent = query;
+            mediaTypeText.textContent = currentMediaType;
+
+            if (results.length > 0) {
+                resultNumber.textContent = results.length;
+                resultsCount.classList.remove('hidden');
+                renderMediaGrid(results);
+            } else {
+                noResults.classList.remove('hidden');
+            }
+        }
+
+        // Render media grid
+        function renderMediaGrid(items) {
+            mediaGrid.innerHTML = items.map(item => createMediaItemHTML(item)).join('');
+            mediaGrid.classList.remove('hidden');
+        }
+
+        // Create media item HTML - Pure visual, no text
+        function createMediaItemHTML(item) {
+            const isVideo = currentMediaType === 'videos';
+
+            return `
+                <div class="media-item rounded-lg overflow-hidden hover-scale cursor-pointer fade-in shadow-lg">
+                    <div class="relative group">
+                        ${isVideo ? `
+                            <div class="relative video-container">
+                                <video 
+                                    class="w-full h-auto rounded-lg" 
+                                    poster="${item.thumbnail}"
+                                    preload="metadata"
+                                    muted
+                                    loop
+                                    crossorigin="anonymous"
+                                    onmouseenter="playVideo(this)" 
+                                    onmouseleave="pauseVideo(this)"
+                                    onclick="toggleVideoPlayback(this)"
+                                    onerror="handleVideoError(this, '${item.preview}', '${item.thumbnail}')"
+                                    onloadstart="console.log('🎬 Loading video:', '${item.preview}')"
+                                    oncanplay="console.log('✅ Video ready to play')"
+                                >
+                                    <source src="${item.preview}" type="video/mp4">
+                                    <source src="${item.preview}" type="video/webm">
+                                    <source src="${item.preview}" type="video/ogg">
+                                </video>
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 video-play-overlay">
+                                    <div class="bg-white bg-opacity-90 rounded-full p-3">
+                                        <svg class="w-8 h-8 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="absolute top-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded pointer-events-none">
+                                    ${item.duration ? formatDuration(item.duration) : ''}
+                                </div>
+                            </div>
+                        ` : `
+                            <img src="${item.thumbnail}" alt="" class="w-full h-auto" loading="lazy">
+                        `}
+
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="flex space-x-3">
+                                <button
+                                    onclick="window.open('${item.sourceUrl}', '_blank')"
+                                    class="p-3 bg-white bg-opacity-90 text-gray-800 rounded-full hover:bg-white transition-colors shadow-lg"
+                                    title="View Source"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </button>
+                                <button
+                                    onclick="downloadMedia('${item.download}', '${item.source}_${item.id}')"
+                                    class="p-3 bg-blue-600 bg-opacity-90 text-white rounded-full hover:bg-blue-700 transition-colors shadow-lg"
+                                    title="Download"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get source badge color
+        function getSourceBadgeColor(source) {
+            switch (source.toLowerCase()) {
+                case 'unsplash': return 'bg-black text-white';
+                case 'pexels': return 'bg-green-600 text-white';
+                case 'pixabay': return 'bg-blue-600 text-white';
+                default: return 'bg-gray-600 text-white';
+            }
+        }
+
+        // Format duration for videos
+        function formatDuration(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // Download media file - HIGHEST QUALITY
+        function downloadMedia(url, filename) {
+            console.log(`⬇️ DOWNLOADING HIGHEST QUALITY:`, {
+                filename: filename,
+                url: url,
+                note: 'This is the highest quality available from the free API'
+            });
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Shuffle array utility
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // UI Helper functions
+        function hideAllSections() {
+            loadingSpinner.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            resultsCount.classList.add('hidden');
+            mediaGrid.classList.add('hidden');
+            noResults.classList.add('hidden');
+            welcomeMessage.classList.add('hidden');
+        }
+
+        function showLoadingSpinner() {
+            loadingSpinner.classList.remove('hidden');
+        }
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+
+        // Video control functions
+        function playVideo(video) {
+            console.log('🎬 Attempting to play video:', video.src);
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log('✅ Video playing successfully');
+                    // Hide play overlay when video is playing
+                    const overlay = video.parentElement.querySelector('.video-play-overlay');
+                    if (overlay) overlay.style.display = 'none';
+                }).catch(error => {
+                    console.error('❌ Video play failed:', error);
+                });
+            }
+        }
+
+        function pauseVideo(video) {
+            video.pause();
+            video.currentTime = 0;
+            // Show play overlay when video is paused
+            const overlay = video.parentElement.querySelector('.video-play-overlay');
+            if (overlay) overlay.style.display = 'flex';
+        }
+
+        function toggleVideoPlayback(video) {
+            if (video.paused) {
+                playVideo(video);
+            } else {
+                pauseVideo(video);
+            }
+        }
+
+        function handleVideoError(video, videoUrl, thumbnailUrl) {
+            console.error('❌ Video failed to load:', videoUrl);
+            console.log('🔄 Falling back to thumbnail image');
+            
+            // Replace video with thumbnail image
+            const img = document.createElement('img');
+            img.src = thumbnailUrl;
+            img.className = 'w-full h-auto';
+            img.alt = '';
+            img.loading = 'lazy';
+            
+            video.parentElement.replaceChild(img, video);
+        }
+
+        function showSetupMessage() {
+            // Create setup message overlay
+            const setupOverlay = document.createElement('div');
+            setupOverlay.id = 'setupOverlay';
+            setupOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            setupOverlay.innerHTML = `
+                <div class="bg-white rounded-lg p-8 max-w-2xl mx-4 animate-slide-up">
+                    <div class="text-center mb-6">
+                        <div class="text-6xl mb-4">🔧</div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Setup Required</h2>
+                        <p class="text-gray-600">To use this application, you need to add your API keys.</p>
+                    </div>
+
+                    <div class="space-y-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="font-semibold text-blue-800 mb-2">1. Get Free API Keys:</h3>
+                            <ul class="text-sm text-blue-700 space-y-1">
+                                <li>• <strong>Unsplash:</strong> <a href="https://unsplash.com/developers" target="_blank" class="underline">unsplash.com/developers</a></li>
+                                <li>• <strong>Pexels:</strong> <a href="https://www.pexels.com/api/" target="_blank" class="underline">pexels.com/api</a></li>
+                                <li>• <strong>Pixabay:</strong> <a href="https://pixabay.com/api/docs/" target="_blank" class="underline">pixabay.com/api/docs</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="font-semibold text-green-800 mb-2">2. Update API Keys:</h3>
+                            <p class="text-sm text-green-700">
+                                Replace the placeholder keys in the JavaScript code (around line 228) with your actual API keys.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button
+                            onclick="document.getElementById('setupOverlay').remove()"
+                            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            I'll Set This Up Later
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(setupOverlay);
+        }
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
